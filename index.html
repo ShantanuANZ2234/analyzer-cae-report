@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Analyzer CAE – Digital Marketing Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0d12;--bg2:#141824;--bg3:#1a1f2e;
+  --border:rgba(255,255,255,0.065);--border2:rgba(255,255,255,0.11);
+  --orng:#E8531A;--orng2:#ff6b35;
+  --blue:#3d7cf4;--teal:#1baf7a;
+  --text:#dde1ec;--text2:#8b93aa;--text3:#505870;
+  --green:#1baf7a;--red:#e34948;--yellow:#f59e0b;
+  --radius:10px;--radius-lg:14px;
+  --ease:cubic-bezier(0.22,0.68,0,0.99);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(232,83,26,0.25);border-radius:2px}
+
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:99999;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 60% 30%,rgba(232,83,26,0.07) 0%,transparent 60%),#080a0f;
+  transition:opacity 0.8s ease,visibility 0.8s ease}
+#loader.done{opacity:0;visibility:hidden;pointer-events:none}
+.ld-brand{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:rgba(232,83,26,0.6);margin-bottom:36px}
+.cube-scene{perspective:800px;width:140px;height:140px;position:relative;display:flex;align-items:center;justify-content:center;margin-bottom:34px}
+.cube-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:110px;height:110px;border-radius:50%;
+  background:radial-gradient(circle,rgba(232,83,26,0.42) 0%,rgba(232,83,26,0.08) 45%,transparent 70%);
+  filter:blur(14px);animation:glowPulse 1.6s ease-in-out infinite alternate;pointer-events:none}
+@keyframes glowPulse{from{opacity:0.5;transform:translate(-50%,-50%) scale(0.85)}to{opacity:1;transform:translate(-50%,-50%) scale(1.22)}}
+.kpi-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:170px;height:170px;pointer-events:none}
+.kp{position:absolute;border-radius:50%;top:50%;left:50%;margin:-4px 0 0 -4px}
+.kp1{width:8px;height:8px;background:#E8531A;box-shadow:0 0 10px #E8531A;animation:orbit1 3.2s linear infinite}
+.kp2{width:7px;height:7px;background:#3d7cf4;box-shadow:0 0 10px #3d7cf4;animation:orbit2 2.6s linear infinite}
+.kp3{width:7px;height:7px;background:#1baf7a;box-shadow:0 0 10px #1baf7a;animation:orbit3 4.0s linear infinite}
+.kp4{width:6px;height:6px;background:#f59e0b;box-shadow:0 0 8px #f59e0b;animation:orbit4 2.0s linear infinite}
+.kp5{width:6px;height:6px;background:#ff6b35;box-shadow:0 0 8px #ff6b35;animation:orbit5 3.6s linear infinite}
+.kp6{width:5px;height:5px;background:#dde1ec;box-shadow:0 0 6px rgba(220,225,236,0.6);animation:orbit6 4.8s linear infinite}
+@keyframes orbit1{from{transform:rotate(0deg) translateX(76px) rotate(0deg)}to{transform:rotate(360deg) translateX(76px) rotate(-360deg)}}
+@keyframes orbit2{from{transform:rotate(60deg) translateX(62px) rotate(-60deg)}to{transform:rotate(420deg) translateX(62px) rotate(-420deg)}}
+@keyframes orbit3{from{transform:rotate(130deg) translateX(72px) rotate(-130deg)}to{transform:rotate(490deg) translateX(72px) rotate(-490deg)}}
+@keyframes orbit4{from{transform:rotate(210deg) translateX(56px) rotate(-210deg)}to{transform:rotate(570deg) translateX(56px) rotate(-570deg)}}
+@keyframes orbit5{from{transform:rotate(290deg) translateX(80px) rotate(-290deg)}to{transform:rotate(650deg) translateX(80px) rotate(-650deg)}}
+@keyframes orbit6{from{transform:rotate(340deg) translateX(66px) rotate(-340deg)}to{transform:rotate(700deg) translateX(66px) rotate(-700deg)}}
+.cube3d{width:72px;height:72px;position:relative;transform-style:preserve-3d;animation:cubeRotate 4s cubic-bezier(0.4,0,0.2,1) infinite}
+@keyframes cubeRotate{
+  0%{transform:rotateX(-20deg) rotateY(0deg)}25%{transform:rotateX(-20deg) rotateY(90deg)}
+  50%{transform:rotateX(-20deg) rotateY(180deg)}75%{transform:rotateX(-20deg) rotateY(270deg)}
+  100%{transform:rotateX(-20deg) rotateY(360deg)}}
+.cf{position:absolute;width:72px;height:72px;border:1px solid rgba(232,83,26,0.45);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Grotesk',sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;
+  color:rgba(232,83,26,0.5);text-transform:uppercase;background:rgba(232,83,26,0.03)}
+.cf.ft{transform:translateZ(36px)}.cf.bk{transform:rotateY(180deg) translateZ(36px)}
+.cf.rt{transform:rotateY(90deg) translateZ(36px)}.cf.lt{transform:rotateY(-90deg) translateZ(36px)}
+.cf.tp{transform:rotateX(90deg) translateZ(36px)}.cf.bt{transform:rotateX(-90deg) translateZ(36px)}
+.ld-msg{font-family:'Space Grotesk',sans-serif;font-size:12px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;height:20px;text-align:center;transition:opacity 0.25s ease}
+.ld-msg.fade{opacity:0}
+.ld-bar-wrap{width:200px;height:2px;background:rgba(255,255,255,0.05);border-radius:2px;margin-top:18px;overflow:hidden}
+.ld-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--orng),var(--orng2));border-radius:2px;box-shadow:0 0 10px rgba(232,83,26,0.6);transition:width 0.35s ease}
+.ld-pct{font-size:11px;color:var(--text3);margin-top:8px;font-family:'Space Grotesk',sans-serif;letter-spacing:0.08em}
+
+/* PARALLAX */
+.plx{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+.plx-bg{background:radial-gradient(ellipse 75% 55% at 75% 15%,rgba(61,124,244,0.055) 0%,transparent 65%),radial-gradient(ellipse 50% 40% at 8% 78%,rgba(232,83,26,0.05) 0%,transparent 55%)}
+.plx-grid{background-image:linear-gradient(rgba(255,255,255,0.016) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.016) 1px,transparent 1px);background-size:52px 52px}
+.orb{position:absolute;border-radius:50%;filter:blur(80px);animation:orbF 10s ease-in-out infinite;pointer-events:none}
+.orb1{width:360px;height:360px;background:radial-gradient(circle,rgba(61,124,244,0.1),transparent 70%);top:-120px;right:5%;animation-delay:0s}
+.orb2{width:280px;height:280px;background:radial-gradient(circle,rgba(232,83,26,0.08),transparent 70%);bottom:10%;left:2%;animation-delay:-4s}
+.orb3{width:220px;height:220px;background:radial-gradient(circle,rgba(27,175,122,0.06),transparent 70%);top:42%;right:35%;animation-delay:-7s}
+@keyframes orbF{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-28px) scale(1.06)}}
+#waveCanvas{position:fixed;bottom:0;left:0;width:100%;height:100px;pointer-events:none;z-index:1;opacity:0.25}
+.cur-glow{position:fixed;width:360px;height:360px;border-radius:50%;background:radial-gradient(circle,rgba(232,83,26,0.035) 0%,transparent 70%);pointer-events:none;transform:translate(-50%,-50%);z-index:9997;top:0;left:0}
+
+/* QUICK CARD */
+.qc-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.58);z-index:2000;opacity:0;visibility:hidden;transition:opacity 0.22s ease,visibility 0.22s ease;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.qc-overlay.open{opacity:1;visibility:visible}
+.qc-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-44%) scale(0.9);opacity:0;visibility:hidden;
+  background:linear-gradient(145deg,rgba(18,22,34,0.98),rgba(13,15,24,0.98));
+  backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  border:1px solid rgba(232,83,26,0.18);border-radius:20px;padding:28px 28px 24px;
+  width:360px;max-width:92vw;z-index:2001;
+  transition:transform 0.3s cubic-bezier(0.34,1.3,0.64,1),opacity 0.3s ease,visibility 0.3s ease;
+  box-shadow:0 32px 80px rgba(0,0,0,0.65),inset 0 1px 0 rgba(255,255,255,0.055)}
+.qc-popup.open{transform:translate(-50%,-50%) scale(1);opacity:1;visibility:visible}
+.qc-close{position:absolute;top:13px;right:14px;background:rgba(255,255,255,0.05);border:1px solid var(--border2);color:var(--text3);font-size:15px;cursor:pointer;transition:all 0.15s;width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center}
+.qc-close:hover{background:rgba(255,255,255,0.1);color:var(--text)}
+.qc-icon{width:48px;height:48px;border-radius:13px;background:linear-gradient(135deg,rgba(232,83,26,0.14),rgba(232,83,26,0.04));border:1px solid rgba(232,83,26,0.2);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:15px}
+.qc-label{font-size:10px;font-weight:600;color:var(--orng);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:4px}
+.qc-val{font-family:'Space Grotesk',sans-serif;font-size:34px;font-weight:700;color:var(--text);letter-spacing:-0.025em;line-height:1;margin-bottom:6px}
+.qc-delta{font-size:12px;font-weight:500;margin-bottom:16px}
+.qc-div{height:1px;background:linear-gradient(90deg,rgba(232,83,26,0.18),transparent);margin-bottom:14px}
+.qc-sec{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.qc-desc{font-size:13px;color:var(--text2);line-height:1.65}
+
+/* HEADER */
+.rpt{position:relative;z-index:10}
+.rpt-inner{margin:0 auto;width:100%;max-width:1160px;padding:0 28px}
+.hdr{display:flex;align-items:center;justify-content:space-between;padding:15px 0;border-bottom:1px solid var(--border);gap:16px;flex-wrap:wrap;
+  backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%);
+  background:rgba(11,13,18,0.85);position:sticky;top:0;z-index:200;transition:box-shadow 0.3s,border-color 0.3s}
+.hdr.scrolled{box-shadow:0 4px 40px rgba(0,0,0,0.55);border-bottom-color:rgba(232,83,26,0.1)}
+.hdr-left{display:flex;align-items:center;gap:14px}
+.logo-ring{width:44px;height:44px;border-radius:11px;background:rgba(255,255,255,0.04);border:1px solid rgba(232,83,26,0.25);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;transition:border-color 0.2s,box-shadow 0.2s}
+.logo-ring:hover{border-color:rgba(232,83,26,0.5);box-shadow:0 0 16px rgba(232,83,26,0.14)}
+.logo-ring img{width:36px;height:36px;object-fit:contain;border-radius:5px}
+.co-name{font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--orng);margin-bottom:1px}
+.rpt-title{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:700;color:var(--text);letter-spacing:-0.015em}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.msel{font-size:12px;padding:6px 12px;border:1px solid var(--border2);border-radius:8px;background:rgba(20,24,36,0.95);color:var(--text);font-family:'Inter',sans-serif;cursor:pointer}
+.msel:focus{outline:none;border-color:var(--orng)}
+.upd{font-size:11px;color:var(--text3);white-space:nowrap}
+.live-badge{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:500;color:var(--green);padding:5px 11px;background:rgba(27,175,122,0.07);border:1px solid rgba(27,175,122,0.15);border-radius:20px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:ldot 2.2s ease-in-out infinite}
+@keyframes ldot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.3;transform:scale(0.6)}}
+
+/* TABS — CSS-only underline via .tab-ink, NO border-bottom on .tab.on */
+.tab-row{display:flex;gap:1px;padding:14px 0 0;flex-wrap:wrap;border-bottom:1px solid var(--border);position:relative}
+.tab{font-size:12.5px;padding:7px 14px;cursor:pointer;color:var(--text3);border:none;background:none;font-family:'Inter',sans-serif;margin-bottom:0;transition:color 0.2s,background 0.2s;border-radius:6px 6px 0 0}
+.tab:hover:not(.on){color:var(--text2);background:rgba(255,255,255,0.025)}
+.tab.on{color:var(--orng);font-weight:500;background:rgba(232,83,26,0.04)}
+.tab-ink{position:absolute;bottom:0;left:0;height:2px;width:0;background:linear-gradient(90deg,var(--orng),var(--orng2));border-radius:2px 2px 0 0;pointer-events:none;transition:left 0.28s var(--ease),width 0.28s var(--ease);box-shadow:0 0 8px rgba(232,83,26,0.45)}
+
+/* PANELS — pure CSS lazy fade, NO JS inline style conflict */
+.pnl{display:none}
+.pnl.on{display:block}
+.pnl-inner{opacity:0;transform:translateY(12px);transition:opacity 0.4s ease,transform 0.4s var(--ease)}
+.pnl.on .pnl-inner{opacity:1;transform:translateY(0)}
+.pnl.on .sec{animation:secIn 0.4s var(--ease) both}
+.pnl.on .sec:nth-child(1){animation-delay:0.05s}
+.pnl.on .sec:nth-child(2){animation-delay:0.12s}
+.pnl.on .sec:nth-child(3){animation-delay:0.19s}
+.pnl.on .sec:nth-child(4){animation-delay:0.26s}
+.pnl.on .sec:nth-child(5){animation-delay:0.33s}
+@keyframes secIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* LAYOUT */
+.sec-label{font-size:10px;font-weight:600;letter-spacing:0.11em;text-transform:uppercase;color:var(--text3);margin-bottom:14px}
+.sec{margin-bottom:28px}
+.dvdr{height:1px;background:linear-gradient(90deg,var(--border2),transparent);margin:26px 0}
+
+/* KPI CARDS */
+.kgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:22px}
+.kcard{background:rgba(255,255,255,0.035);backdrop-filter:blur(16px) saturate(160%);-webkit-backdrop-filter:blur(16px) saturate(160%);border:1px solid rgba(255,255,255,0.07);border-radius:var(--radius-lg);padding:17px 18px;transition:transform 0.22s var(--ease),box-shadow 0.22s,border-color 0.22s;cursor:pointer;position:relative;overflow:hidden;user-select:none}
+.kcard-top{position:absolute;top:0;left:0;right:0;height:1.5px;background:linear-gradient(90deg,var(--orng),transparent);opacity:0;transition:opacity 0.22s;border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+.kcard:hover .kcard-top{opacity:1}
+.kcard:hover{border-color:rgba(232,83,26,0.24);transform:translateY(-3px) scale(1.01);box-shadow:0 12px 36px rgba(0,0,0,0.32)}
+.kcard:active{transform:translateY(-1px) scale(0.99)}
+.kcard.accent{border-color:rgba(232,83,26,0.18);background:linear-gradient(135deg,rgba(255,255,255,0.048),rgba(232,83,26,0.055))}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px) scale(0.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.kcard{animation:cardIn 0.42s var(--ease) both}
+.kcard:nth-child(1){animation-delay:.05s}.kcard:nth-child(2){animation-delay:.09s}
+.kcard:nth-child(3){animation-delay:.13s}.kcard:nth-child(4){animation-delay:.17s}
+.kcard:nth-child(5){animation-delay:.21s}.kcard:nth-child(6){animation-delay:.25s}
+.kcard:nth-child(7){animation-delay:.29s}.kcard:nth-child(8){animation-delay:.33s}
+.klbl{font-size:11px;color:var(--text3);margin-bottom:7px;font-weight:500}
+.kval{font-family:'Space Grotesk',sans-serif;font-size:26px;font-weight:700;color:var(--text);line-height:1;letter-spacing:-0.025em}
+@keyframes kMorph{0%{transform:scale(0.78) translateY(6px);opacity:0}65%{transform:scale(1.08) translateY(-2px);opacity:1}100%{transform:scale(1) translateY(0);opacity:1}}
+.kval.animating{animation:kMorph 0.4s cubic-bezier(0.34,1.56,0.64,1) both}
+.kdelta{font-size:11px;margin-top:5px;display:flex;align-items:center;gap:3px;font-weight:500}
+.kcard-hint{font-size:10px;color:rgba(232,83,26,0.4);margin-top:5px;font-style:italic}
+.up{color:var(--green)}.dn{color:var(--red)}.flat{color:var(--text3)}
+
+/* CHART */
+.chart-box{background:rgba(255,255,255,0.028);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;transition:border-color 0.2s}
+.chart-box:hover{border-color:var(--border2)}
+.chart-wrap{position:relative;width:100%;height:200px}
+.chart-note{font-size:11px;color:var(--text3);margin-top:8px;line-height:1.5}
+.lgrow{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:12px}
+.li{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text3)}
+.ld2{width:9px;height:9px;border-radius:2px;flex-shrink:0}
+
+/* INSIGHT CARDS */
+.insight-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;margin-top:14px}
+.ins-card{border-radius:11px;padding:14px 15px;font-size:12.5px}
+.ins-good{background:rgba(27,175,122,0.07);border:1px solid rgba(27,175,122,0.15)}
+.ins-bad{background:rgba(227,73,72,0.07);border:1px solid rgba(227,73,72,0.15)}
+.ins-neutral{background:rgba(255,255,255,0.028);border:1px solid var(--border)}
+.ins-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px}
+.ins-good .ins-label{color:var(--green)}.ins-bad .ins-label{color:var(--red)}.ins-neutral .ins-label{color:var(--text3)}
+.ins-good .ins-text{color:rgba(27,175,122,0.85)}.ins-bad .ins-text{color:rgba(227,73,72,0.82)}.ins-neutral .ins-text{color:var(--text2)}
+
+/* FORMS */
+.egrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fl{font-size:11px;color:var(--text3);font-weight:500}
+input.fi,select.fi,textarea.fi{font-size:13px;padding:9px 12px;border:1px solid rgba(255,255,255,0.08);border-radius:9px;background:rgba(255,255,255,0.032);color:var(--text);width:100%;font-family:'Inter',sans-serif;transition:border-color 0.18s,background 0.18s,box-shadow 0.18s}
+input.fi::placeholder,textarea.fi::placeholder{color:var(--text3)}
+input.fi:focus,select.fi:focus,textarea.fi:focus{outline:none;border-color:var(--orng);background:rgba(232,83,26,0.032);box-shadow:0 0 0 3px rgba(232,83,26,0.11)}
+textarea.fi{resize:vertical;min-height:68px;line-height:1.55}
+select.fi{appearance:none;cursor:pointer}
+
+/* TABLES */
+.tw{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border)}
+table{width:100%;font-size:12.5px;border-collapse:collapse}
+thead{background:rgba(255,255,255,0.022)}
+th{font-size:10px;font-weight:600;color:var(--text3);text-align:left;padding:10px 14px;border-bottom:1px solid var(--border);white-space:nowrap;letter-spacing:0.06em;text-transform:uppercase}
+td{padding:10px 14px;border-bottom:1px solid var(--border);color:var(--text2);vertical-align:middle;transition:background 0.12s}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:rgba(255,255,255,0.016)}
+td[contenteditable]{cursor:text}
+td[contenteditable]:focus{background:rgba(232,83,26,0.04);outline:1px solid rgba(232,83,26,0.3);border-radius:3px;color:var(--text)}
+
+/* WORK LOG */
+.wrow{display:grid;grid-template-columns:2fr 1fr 1.2fr 1.6fr;gap:9px;padding:10px 0;border-bottom:1px solid var(--border);align-items:start}
+.wrow.hdr span{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.07em}
+.wrow-impact-wrap{position:relative}
+.wl-gen-btn{position:absolute;right:5px;top:5px;font-size:10px;padding:3px 8px;border:1px solid rgba(232,83,26,0.28);border-radius:5px;background:rgba(232,83,26,0.07);color:var(--orng);cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:all 0.15s;white-space:nowrap;z-index:1}
+.wl-gen-btn:hover{background:rgba(232,83,26,0.18)}
+
+/* BUTTONS */
+.addbtn{font-size:12px;padding:7px 15px;margin-top:12px;color:var(--orng);border:1px solid rgba(232,83,26,0.24);border-radius:9px;background:rgba(232,83,26,0.05);cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all 0.18s;font-family:'Inter',sans-serif;font-weight:500}
+.addbtn:hover{background:rgba(232,83,26,0.12);border-color:rgba(232,83,26,0.4)}
+
+/* SUMMARY */
+.sblock{background:rgba(255,255,255,0.028);border:1px solid var(--border);border-left:3px solid var(--orng);border-radius:0 var(--radius-lg) var(--radius-lg) 0;padding:18px 20px;margin-bottom:12px;transition:all 0.22s}
+.sblock:hover{border-color:rgba(255,255,255,0.09);box-shadow:0 6px 24px rgba(0,0,0,0.16)}
+.sblock h3{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:var(--orng);margin-bottom:11px;text-transform:uppercase;letter-spacing:0.09em}
+.sblock-actions{display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap}
+.gen-btn{font-size:11px;padding:5px 12px;border:1px solid rgba(232,83,26,0.26);border-radius:7px;background:rgba(232,83,26,0.07);color:var(--orng);cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:all 0.17s}
+.gen-btn:hover{background:rgba(232,83,26,0.15)}
+.accept-btn{font-size:11px;padding:5px 12px;border:1px solid rgba(27,175,122,0.26);border-radius:7px;background:rgba(27,175,122,0.07);color:var(--green);cursor:pointer;font-family:'Inter',sans-serif;font-weight:500;transition:all 0.17s;display:none;align-items:center;gap:4px}
+.accept-btn.show{display:flex}
+.accept-btn:hover{background:rgba(27,175,122,0.15)}
+.edit-btn{font-size:11px;padding:5px 12px;border:1px solid var(--border2);border-radius:7px;background:rgba(255,255,255,0.04);color:var(--text3);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.17s;display:none;align-items:center;gap:4px}
+.edit-btn.show{display:flex}
+.edit-btn:hover{background:rgba(255,255,255,0.08);color:var(--text2)}
+.acc-badge{font-size:10.5px;color:var(--green);background:rgba(27,175,122,0.07);border:1px solid rgba(27,175,122,0.16);border-radius:20px;padding:3px 10px;display:none;align-items:center;gap:4px;font-weight:500}
+.acc-badge.show{display:flex}
+.sblock.accepted{border-left-color:var(--green)}
+
+/* MISC */
+.badge{display:inline-block;font-size:10.5px;padding:3px 9px;border-radius:20px;font-weight:500}
+.b-gsc{background:rgba(61,124,244,0.1);color:#7aabf7;border:1px solid rgba(61,124,244,0.17)}
+.b-ga{background:rgba(27,175,122,0.08);color:#5dd4a4;border:1px solid rgba(27,175,122,0.17)}
+.b-li{background:rgba(100,80,230,0.08);color:#a78fff;border:1px solid rgba(100,80,230,0.17)}
+.b-gmb{background:rgba(245,158,11,0.08);color:#fbbf24;border:1px solid rgba(245,158,11,0.17)}
+.b-man{background:rgba(255,255,255,0.05);color:var(--text2);border:1px solid var(--border2)}
+.kpi-cov-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.cov-group{background:rgba(255,255,255,0.028);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px}
+.cov-group-title{font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:600;color:var(--orng);margin-bottom:10px;text-transform:uppercase;letter-spacing:0.08em}
+.cov-item{display:flex;align-items:center;gap:7px;padding:3.5px 0;font-size:12px;color:var(--text2)}
+.cov-chk{width:15px;height:15px;border-radius:50%;background:rgba(27,175,122,0.1);border:1px solid rgba(27,175,122,0.24);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:8px;color:var(--green)}
+.guide-row{display:grid;grid-template-columns:2fr 3fr 1.5fr;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);align-items:start}
+.guide-hdr span{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em}
+.cfp{position:fixed;top:-12px;pointer-events:none;z-index:9999;border-radius:2px;animation:cfFall linear forwards}
+@keyframes cfFall{0%{transform:translateY(0) rotateZ(0);opacity:1}100%{transform:translateY(105vh) rotateZ(680deg);opacity:0}}
+
+@media(max-width:640px){
+  .egrid{grid-template-columns:1fr}.kgrid{grid-template-columns:1fr 1fr}
+  .insight-row{grid-template-columns:1fr}.kpi-cov-grid{grid-template-columns:1fr}
+  .wrow{grid-template-columns:1fr 1fr}.rpt-inner{padding:0 16px}
+  .rpt-title{font-size:15px}.qc-popup{width:calc(100vw - 28px)}
+  .guide-row{grid-template-columns:1fr 2fr}
+}
+
+/* SAVED TOAST */
+#savedToast{position:fixed;bottom:24px;right:24px;background:rgba(27,175,122,0.12);border:1px solid rgba(27,175,122,0.25);color:var(--green);font-size:12px;font-weight:500;padding:8px 16px;border-radius:20px;z-index:3000;opacity:0;transform:translateY(8px);transition:opacity 0.3s ease,transform 0.3s ease;pointer-events:none;font-family:'Inter',sans-serif;backdrop-filter:blur(8px)}
+#savedToast.show{opacity:1;transform:translateY(0)}
+
+/* HISTORY SIDEBAR */
+#historyWrap{display:none;align-items:center;gap:8px;padding:10px 0 6px;margin-bottom:2px;flex-wrap:wrap}
+.hist-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:0.1em;white-space:nowrap}
+#historySidebar{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.hist-btn{font-size:11.5px;padding:4px 12px;border:1px solid var(--border2);border-radius:20px;background:rgba(255,255,255,0.04);color:var(--text3);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.18s;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.hist-btn:hover{border-color:rgba(232,83,26,0.3);color:var(--text);background:rgba(232,83,26,0.05)}
+.hist-btn.active{border-color:rgba(232,83,26,0.4);color:var(--orng);background:rgba(232,83,26,0.08);font-weight:500}
+.hist-dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0}
+.hist-actions{display:flex;gap:6px;margin-left:auto}
+.hist-action-btn{font-size:11px;padding:4px 11px;border:1px solid var(--border2);border-radius:7px;background:rgba(255,255,255,0.04);color:var(--text3);cursor:pointer;font-family:'Inter',sans-serif;transition:all 0.18s}
+.hist-action-btn:hover{background:rgba(255,255,255,0.08);color:var(--text2)}
+.hist-action-btn.danger:hover{border-color:rgba(227,73,72,0.3);color:var(--red);background:rgba(227,73,72,0.06)}
+
+</style>
+</head>
+<body>
+<div class="cur-glow" id="curGlow" aria-hidden="true"></div>
+<div class="plx plx-bg" data-spd="0.18" aria-hidden="true"></div>
+<div class="plx plx-grid" data-spd="0.07" aria-hidden="true"></div>
+<div class="plx" data-spd="0.28" aria-hidden="true">
+  <div class="orb orb1"></div><div class="orb orb2"></div><div class="orb orb3"></div>
+</div>
+<canvas id="waveCanvas" aria-hidden="true"></canvas>
+<!-- LOADER -->
+<div id="loader" role="status" aria-label="Loading dashboard">
+  <div class="ld-brand">Analyzer CAE Solutions</div>
+  <div class="cube-scene" aria-hidden="true">
+    <div class="cube-glow"></div>
+    <div class="kpi-ring">
+      <div class="kp kp1"></div><div class="kp kp2"></div><div class="kp kp3"></div>
+      <div class="kp kp4"></div><div class="kp kp5"></div><div class="kp kp6"></div>
+    </div>
+    <div class="cube3d">
+      <div class="cf ft">KPI</div><div class="cf bk">SEO</div>
+      <div class="cf rt">GSC</div><div class="cf lt">GA4</div>
+      <div class="cf tp">LI</div><div class="cf bt">GMB</div>
+    </div>
+  </div>
+  <div class="ld-msg" id="ldMsg">Gathering performance data...</div>
+  <div class="ld-bar-wrap"><div class="ld-bar" id="ldBar"></div></div>
+  <div class="ld-pct" id="ldPct">0%</div>
+</div>
+<!-- QUICK CARD -->
+<div class="qc-overlay" id="qcOverlay" aria-hidden="true" onclick="closeQC()"></div>
+<div class="qc-popup" id="qcPopup" role="dialog" aria-modal="true" aria-label="KPI business insight">
+  <button class="qc-close" onclick="closeQC()" aria-label="Close">&#10005;</button>
+  <div class="qc-icon" id="qcIcon" aria-hidden="true"></div>
+  <div class="qc-label" id="qcLabel"></div>
+  <div class="qc-val" id="qcVal">—</div>
+  <div class="qc-delta flat" id="qcDelta">No comparison data yet</div>
+  <div class="qc-div"></div>
+  <div class="qc-sec">Business impact</div>
+  <div class="qc-desc" id="qcDesc"></div>
+</div>
+<div class="rpt">
+<div class="rpt-inner">
+<div class="hdr" id="mainHdr">
+  <div class="hdr-left">
+    <div class="logo-ring">
+      <img src="data:image/jpeg;base64,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" alt="Analyzer CAE Solutions logo"/>
+    </div>
+    <div>
+      <div class="co-name">Analyzer CAE Solutions</div>
+      <div class="rpt-title">Digital Marketing Report</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="live-badge"><span class="live-dot" aria-hidden="true"></span>Live tracker</div>
+    <select class="msel" id="msel" onchange="onMonthChange()">
+      <option value="Jan 2026">Jan 2026</option><option value="Feb 2026">Feb 2026</option>
+      <option value="Mar 2026">Mar 2026</option><option value="Apr 2026">Apr 2026</option>
+      <option value="May 2026">May 2026</option><option value="Jun 2026" selected>Jun 2026</option>
+      <option value="Jul 2026">Jul 2026</option><option value="Aug 2026">Aug 2026</option>
+      <option value="Sep 2026">Sep 2026</option><option value="Oct 2026">Oct 2026</option>
+      <option value="Nov 2026">Nov 2026</option><option value="Dec 2026">Dec 2026</option>
+    </select>
+    <span class="upd">Updated: Jun 30, 2026</span>
+  </div>
+</div>
+<div class="tab-row" id="tabRow">
+  <button class="tab on" onclick="sw('dashboard',this)">Dashboard</button>
+  <button class="tab" onclick="sw('perf',this)">Performance</button>
+  <button class="tab" onclick="sw('worklog',this)">Work log</button>
+  <button class="tab" onclick="sw('content',this)">Content</button>
+  <button class="tab" onclick="sw('seo',this)">SEO tracker</button>
+  <button class="tab" onclick="sw('offpage',this)">Off-page</button>
+  <button class="tab" onclick="sw('recruit',this)">Recruitment</button>
+  <button class="tab" onclick="sw('summary',this)">Summary</button>
+  <button class="tab" onclick="sw('guide',this)">Data guide</button>
+  <div class="tab-ink" id="tabInk" aria-hidden="true"></div>
+</div>
+
+<!-- SAVED TOAST -->
+<div id="savedToast" aria-live="polite">&#10003; Saved</div>
+
+<!-- MONTH HISTORY BAR -->
+<div id="historyWrap">
+  <span class="hist-label">Saved reports:</span>
+  <div id="historySidebar"></div>
+  <div class="hist-actions">
+    <button class="hist-action-btn" onclick="exportAllData()" title="Export all months as JSON">&#8595; Export</button>
+    <button class="hist-action-btn danger" onclick="clearMonthData()" title="Clear current month">&#10005; Clear month</button>
+  </div>
+</div>
+
+<div class="pnl on" id="tab-dashboard">
+<div class="pnl-inner">
+<div class="sec">
+    <p class="sec-label">Month at a glance — click any card for business insight</p>
+    <div class="kgrid" id="kgrid">
+      <div class="kcard accent" onclick="openQC('clicks')"><div class="klbl">&#9654; GSC Clicks</div><div class="kval" id="vclk">—</div><div class="kdelta flat" id="dclk">Enter below</div></div>
+      <div class="kcard" onclick="openQC('impressions')"><div class="klbl">&#128065; Impressions</div><div class="kval" id="vimp">—</div><div class="kdelta flat" id="dimp">Enter below</div></div>
+      <div class="kcard" onclick="openQC('ctr')"><div class="klbl">% Avg. CTR</div><div class="kval" id="vctr">—</div><div class="kdelta flat" id="dctr">Enter below</div></div>
+      <div class="kcard" onclick="openQC('position')"><div class="klbl"># Avg. Position</div><div class="kval" id="vpos">—</div><div class="kdelta flat" id="dpos">Enter below</div></div>
+      <div class="kcard" onclick="openQC('sessions')"><div class="klbl">&#128100; GA4 Sessions</div><div class="kval" id="vses">—</div><div class="kdelta flat" id="dses">Enter below</div></div>
+      <div class="kcard" onclick="openQC('linkedin')"><div class="klbl">in LinkedIn Reach</div><div class="kval" id="vlin">—</div><div class="kdelta flat" id="dlin">Enter below</div></div>
+      <div class="kcard" onclick="openQC('backlinks')"><div class="klbl">&#128279; Backlinks Added</div><div class="kval" id="vbkl">—</div><div class="kdelta flat" id="dbkl">—</div></div>
+      <div class="kcard" onclick="openQC('content')"><div class="klbl">&#128196; Content Pieces</div><div class="kval" id="vcnt">—</div><div class="kdelta flat" id="dcnt">—</div></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="sec-label">Enter this month vs last month</p>
+    <div class="egrid">
+      <div class="fg"><span class="fl">GSC clicks — this month</span><input class="fi" id="iclk" type="number" placeholder="340" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">GSC clicks — last month</span><input class="fi" id="iclkp" type="number" placeholder="290" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Impressions — this month</span><input class="fi" id="iimp" type="number" placeholder="12000" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Impressions — last month</span><input class="fi" id="iimpp" type="number" placeholder="10500" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">CTR % — this month</span><input class="fi" id="ictr" type="number" step="0.1" placeholder="2.8" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">CTR % — last month</span><input class="fi" id="ictrp" type="number" step="0.1" placeholder="2.4" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Avg. position — this month</span><input class="fi" id="ipos" type="number" step="0.1" placeholder="18.4" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Avg. position — last month</span><input class="fi" id="iposp" type="number" step="0.1" placeholder="22.1" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">GA4 sessions — this month</span><input class="fi" id="ises" type="number" placeholder="860" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">GA4 sessions — last month</span><input class="fi" id="isesp" type="number" placeholder="740" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">LI impressions — this month</span><input class="fi" id="ilin" type="number" placeholder="4200" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">LI impressions — last month</span><input class="fi" id="ilinp" type="number" placeholder="3800" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Backlinks added</span><input class="fi" id="ibkl" type="number" placeholder="8" oninput="upd();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Content pieces published</span><input class="fi" id="icnt" type="number" placeholder="12" oninput="upd();scheduleSave()"/></div>
+    </div>
+  </div>
+
+  <div class="sec">
+    <p class="sec-label">This month vs last month — key metrics comparison</p>
+    <div class="lgrow">
+      <span class="li"><span class="ld" style="background:#E8531A"></span>This month</span>
+      <span class="li"><span class="ld" style="background:#3d4060"></span>Last month</span>
+    </div>
+    <div class="chart-box">
+      <div class="chart-wrap"><canvas id="cmpChart" role="img" aria-label="Bar chart comparing key metrics this month versus last month"></canvas></div>
+      <p class="chart-note">Impressions and LinkedIn reach are shown at their actual scale relative to clicks and sessions for clarity.</p>
+    </div>
+    <div class="insight-row" id="insightRow" style="display:none">
+      <div class="ins-card ins-good"><div class="ins-label">&#9650; Win this month</div><div class="ins-text" id="ins1">—</div></div>
+      <div class="ins-card ins-bad"><div class="ins-label">&#9660; Needs attention</div><div class="ins-text" id="ins2">—</div></div>
+      <div class="ins-card ins-neutral"><div class="ins-label">&#8594; Overall trend</div><div class="ins-text" id="ins3">—</div></div>
+    </div>
+  </div>
+</div><!-- /pnl-inner -->
+</div>
+
+<!-- === PERFORMANCE ========== -->
+<div class="pnl" id="tab-perf">
+<div class="pnl-inner">
+<div class="sec">
+    <p class="sec-label">GSC — 6-month trend (edit table below, chart updates automatically)</p>
+    <div class="lgrow">
+      <span class="li"><span class="ld" style="background:#E8531A"></span>Clicks</span>
+      <span class="li"><span class="ld" style="background:#3d4060"></span>Impressions (scaled same axis)</span>
+    </div>
+    <div class="chart-box"><div class="chart-wrap"><canvas id="gscChart" role="img" aria-label="6-month GSC performance trend"></canvas></div></div>
+  </div>
+  <div class="sec" style="margin-top:20px">
+    <p class="sec-label">Monthly data — click any cell to edit</p>
+    <div class="tw"><table id="perfTable">
+      <thead><tr><th>Month</th><th>Clicks</th><th>Impressions</th><th>CTR %</th><th>Avg. position</th><th>GA4 sessions</th><th>Org. sessions</th><th>LI impressions</th></tr></thead>
+      <tbody>
+        <tr><td contenteditable>Jan 2026</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td></tr>
+        <tr><td contenteditable>Feb 2026</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td></tr>
+        <tr><td contenteditable>Mar 2026</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td></tr>
+        <tr><td contenteditable>Apr 2026</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td></tr>
+        <tr><td contenteditable>May 2026</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td></tr>
+        <tr><td contenteditable>Jun 2026</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td><td contenteditable>0</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <div class="dvdr"></div>
+  <div class="sec">
+    <p class="sec-label">GMB local performance — this month vs last month</p>
+    <div class="egrid">
+      <div class="fg"><span class="fl">Profile views — this month</span><input class="fi" id="igmbv" type="number" placeholder="140" oninput="updGMB();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Profile views — last month</span><input class="fi" id="igmbvp" type="number" placeholder="120" oninput="updGMB();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Website clicks — this month</span><input class="fi" id="igmbw" type="number" placeholder="22" oninput="updGMB();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Website clicks — last month</span><input class="fi" id="igmbwp" type="number" placeholder="18" oninput="updGMB();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Direction requests — this month</span><input class="fi" id="igmbd" type="number" placeholder="4" oninput="updGMB();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Direction requests — last month</span><input class="fi" id="igmbdp" type="number" placeholder="3" oninput="updGMB();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Calls — this month</span><input class="fi" id="igmbc" type="number" placeholder="3" oninput="updGMB();scheduleSave()"/></div>
+      <div class="fg"><span class="fl">Calls — last month</span><input class="fi" id="igmbcp" type="number" placeholder="2" oninput="updGMB();scheduleSave()"/></div>
+    </div>
+    <div class="chart-box" id="gmbChartBox" style="display:none">
+      <div class="chart-wrap" style="height:160px"><canvas id="gmbChart" role="img" aria-label="GMB comparison chart"></canvas></div>
+    </div>
+  </div>
+  <div class="dvdr"></div>
+  <div class="sec">
+    <p class="sec-label">Keyword ranking highlights</p>
+    <div class="tw"><table>
+      <thead><tr><th>Keyword</th><th>Type</th><th>Position this month</th><th>Position last month</th><th>Change</th><th>Top 10?</th></tr></thead>
+      <tbody id="kwbody">
+        <tr><td contenteditable>FEA services USA</td><td><select class="fi" style="min-width:105px"><option>Non-branded</option><option>Branded</option></select></td><td contenteditable>24</td><td contenteditable>31</td><td contenteditable style="color:var(--green)">+7</td><td><select class="fi" style="min-width:56px"><option>Yes</option><option>No</option></select></td></tr>
+        <tr><td contenteditable>CFD analysis company</td><td><select class="fi" style="min-width:105px"><option>Non-branded</option><option>Branded</option></select></td><td contenteditable>18</td><td contenteditable>22</td><td contenteditable style="color:var(--green)">+4</td><td><select class="fi" style="min-width:56px"><option>No</option><option>Yes</option></select></td></tr>
+        <tr><td contenteditable>Analyzer CAE</td><td><select class="fi" style="min-width:105px"><option>Branded</option><option>Non-branded</option></select></td><td contenteditable>2</td><td contenteditable>3</td><td contenteditable style="color:var(--green)">+1</td><td><select class="fi" style="min-width:56px"><option>Yes</option><option>No</option></select></td></tr>
+      </tbody>
+    </table></div>
+    <button class="addbtn" onclick="addKW()">+ Add keyword</button>
+  </div>
+</div><!-- /pnl-inner -->
+</div>
+
+<!-- === WORK LOG ========== -->
+<div class="pnl" id="tab-worklog">
+<div class="pnl-inner">
+<div class="sec">
+    <p class="sec-label">Activities completed this month — click "Auto impact" to generate practical business impact</p>
+    <div class="wrow hdr"><span>Activity</span><span>Status</span><span>Output</span><span>Business impact</span></div>
+    <div id="wlbody">
+      <div class="wrow"><div><input class="fi" placeholder="e.g. On-page SEO – FEA services page" style="width:100%" oninput="clearAutoImpact(this)"/></div><div><select class="fi"><option value="">–</option><option>Done</option><option>In progress</option><option>Planned</option></select></div><div><input class="fi" placeholder="Meta, H1, schema updated"/></div><div class="wrow-impact-wrap"><input class="fi impact-field" placeholder="Business impact" style="padding-right:80px"/><button class="wl-gen-btn" onclick="autoImpact(this)">Auto impact</button></div></div>
+      <div class="wrow"><div><input class="fi" placeholder="Activity" style="width:100%" oninput="clearAutoImpact(this)"/></div><div><select class="fi"><option value="">–</option><option>Done</option><option>In progress</option><option>Planned</option></select></div><div><input class="fi" placeholder="Output"/></div><div class="wrow-impact-wrap"><input class="fi impact-field" placeholder="Business impact" style="padding-right:80px"/><button class="wl-gen-btn" onclick="autoImpact(this)">Auto impact</button></div></div>
+      <div class="wrow"><div><input class="fi" placeholder="Activity" style="width:100%" oninput="clearAutoImpact(this)"/></div><div><select class="fi"><option value="">–</option><option>Done</option><option>In progress</option><option>Planned</option></select></div><div><input class="fi" placeholder="Output"/></div><div class="wrow-impact-wrap"><input class="fi impact-field" placeholder="Business impact" style="padding-right:80px"/><button class="wl-gen-btn" onclick="autoImpact(this)">Auto impact</button></div></div>
+    </div>
+    <button class="addbtn" onclick="addWL()">+ Add row</button>
+  </div>
+</div><!-- /pnl-inner -->
+</div>
+
+<!-- === CONTENT ========== -->
+<div class="pnl" id="tab-content">
+<div class="pnl-inner">
+<div class="sec">
+    <p class="sec-label">Content published this month</p>
+    <div class="tw"><table>
+      <thead><tr><th style="min-width:148px">Title / topic</th><th>Platform</th><th>Type</th><th style="min-width:118px">Target keyword</th><th>Industry</th><th>Status</th></tr></thead>
+      <tbody id="ctbody">
+        <tr><td contenteditable>Add title</td><td><select class="fi" style="min-width:88px"><option>LinkedIn</option><option>Blog</option><option>Hashnode</option><option>Reddit</option><option>Eng-Tips</option><option>SimScale</option><option>ResearchGate</option><option>DEV.to</option><option>Quora</option><option>Other</option></select></td><td><select class="fi" style="min-width:88px"><option>Article</option><option>Post</option><option>Case study</option><option>Forum reply</option><option>Technical</option><option>Repurposed</option></select></td><td contenteditable>Keyword</td><td contenteditable>Industry</td><td><select class="fi" style="min-width:88px"><option>Published</option><option>Draft</option><option>Scheduled</option><option>Pending</option></select></td></tr>
+        <tr><td contenteditable>Add title</td><td><select class="fi" style="min-width:88px"><option>LinkedIn</option><option>Blog</option><option>Hashnode</option><option>Reddit</option><option>Eng-Tips</option><option>SimScale</option><option>ResearchGate</option><option>DEV.to</option><option>Quora</option><option>Other</option></select></td><td><select class="fi" style="min-width:88px"><option>Article</option><option>Post</option><option>Case study</option><option>Forum reply</option><option>Technical</option><option>Repurposed</option></select></td><td contenteditable>Keyword</td><td contenteditable>Industry</td><td><select class="fi" style="min-width:88px"><option>Published</option><option>Draft</option><option>Scheduled</option><option>Pending</option></select></td></tr>
+      </tbody>
+    </table></div>
+    <button class="addbtn" onclick="addCT()">+ Add row</button>
+  </div>
+  <div class="dvdr"></div>
+  <div class="sec">
+    <p class="sec-label">Content repurposing tracker</p>
+    <div class="tw"><table>
+      <thead><tr><th>Original asset</th><th>Repurposed to</th><th>Platform</th><th>Status</th></tr></thead>
+      <tbody id="rpbody">
+        <tr><td contenteditable>Original article / post</td><td contenteditable>Carousel, thread, short note</td><td><select class="fi" style="min-width:88px"><option>LinkedIn</option><option>Twitter/X</option><option>Reddit</option><option>Quora</option><option>Other</option></select></td><td><select class="fi" style="min-width:80px"><option>Done</option><option>In progress</option><option>Planned</option></select></td></tr>
+      </tbody>
+    </table></div>
+    <button class="addbtn" onclick="addRP()">+ Add row</button>
+  </div>
+</div><!-- /pnl-inner -->
+</div>
+
+<!-- === SEO TRACKER ========== -->
+<div class="pnl" id="tab-seo">
+<div class="pnl-inner">
+<div class="sec">
+    <p class="sec-label">On-page SEO — page-level status</p>
+    <div class="tw"><table>
+      <thead><tr><th style="min-width:115px">Page / URL</th><th style="min-width:128px">Target keyword</th><th>Meta</th><th>H1/H2</th><th>Schema</th><th>Body copy</th><th>Int. links</th><th>Tech fixes</th><th>Overall</th></tr></thead>
+      <tbody id="seobody">
+        <tr><td contenteditable>/fea-services/</td><td contenteditable>FEA services USA</td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:98px"><option>Monitoring</option><option>Implemented</option><option>Approved</option><option>In review</option><option>Planned</option></select></td></tr>
+        <tr><td contenteditable>/cfd-services/</td><td contenteditable>CFD analysis company</td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>Done</option><option>In progress</option><option>Pending</option></select></td><td><select class="fi" style="min-width:98px"><option>Monitoring</option><option>Implemented</option><option>Approved</option><option>In review</option><option>Planned</option></select></td></tr>
+        <tr><td contenteditable>/api-579/</td><td contenteditable>API 579 fitness for service</td><td><select class="fi" style="min-width:72px"><option>In progress</option><option>Done</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>In progress</option><option>Done</option><option>Pending</option></select></td><td><select class="fi" style="min-width:72px"><option>Pending</option><option>Done</option><option>In progress</option></select></td><td><select class="fi" style="min-width:72px"><option>Pending</option><option>Done</option><option>In progress</option></select></td><td><select class="fi" style="min-width:72px"><option>Pending</option><option>Done</option><option>In progress</option></select></td><td><select class="fi" style="min-width:72px"><option>Pending</option><option>Done</option><option>In progress</option></select></td><td><select class="fi" style="min-width:98px"><option>In review</option><option>Monitoring</option><option>Implemented</option><option>Approved</option><option>Planned</option></select></td></tr>
+      </tbody>
+    </table></div>
+    <button class="addbtn" onclick="addSEO()">+ Add page</button>
+  </div>
+  <div class="dvdr"></div>
+  <div class="sec">
+    <p class="sec-label">Landing page performance (from GA4)</p>
+    <div class="tw"><table>
+      <thead><tr><th>Page</th><th>Sessions</th><th>Engagement rate %</th><th>Avg. time on page</th><th>Key events</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td contenteditable>/fea-services/</td><td contenteditable>—</td><td contenteditable>—</td><td contenteditable>—</td><td contenteditable>—</td><td contenteditable>—</td></tr>
+        <tr><td contenteditable>/cfd-services/</td><td contenteditable>—</td><td contenteditable>—</td><td contenteditable>—</td><td contenteditable>—</td><td contenteditable>—</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+</div><!-- /pnl-inner -->
+</div>
+
+<!-- === OFF-PAGE ========== -->
+<div class="pnl" id="tab-offpage">
+<div class="pnl-inner">
+<div class="sec">
+    <p class="sec-label">Directory listings and backlinks</p>
+    <div class="tw"><table>
+      <thead><tr><th style="min-width:128px">Platform</th><th>DA</th><th>Region</th><th>Link type</th><th>NAP</th><th>Status</th><th style="min-width:108px">Notes</th></tr></thead>
+      <tbody id="opbody">
+        <tr><td contenteditable>Add platform</td><td contenteditable>—</td><td><select class="fi" style="min-width:76px"><option>Global</option><option>USA</option><option>Canada</option><option>UK</option><option>UAE</option><option>Australia</option></select></td><td><select class="fi" style="min-width:82px"><option>Dofollow</option><option>Nofollow</option><option>Citation</option></select></td><td><select class="fi" style="min-width:66px"><option>Yes</option><option>No</option><option>Partial</option></select></td><td><select class="fi" style="min-width:82px"><option>Live</option><option>Submitted</option><option>Pending</option><option>Rejected</option></select></td><td contenteditable>—</td></tr>
+        <tr><td contenteditable>Add platform</td><td contenteditable>—</td><td><select class="fi" style="min-width:76px"><option>Global</option><option>USA</option><option>Canada</option><option>UK</option><option>UAE</option><option>Australia</option></select></td><td><select class="fi" style="min-width:82px"><option>Dofollow</option><option>Nofollow</option><option>Citation</option></select></td><td><select class="fi" style="min-width:66px"><option>Yes</option><option>No</option><option>Partial</option></select></td><td><select class="fi" style="min-width:82px"><option>Live</option><option>Submitted</option><option>Pending</option><option>Rejected</option></select></td><td contenteditable>—</td></tr>
+        <tr><td contenteditable>Add platform</td><td contenteditable>—</td><td><select class="fi" style="min-width:76px"><option>Global</option><option>USA</option><option>Canada</option><option>UK</option><option>UAE</option><option>Australia</option></select></td><td><select class="fi" style="min-width:82px"><option>Dofollow</option><option>Nofollow</option><option>Citation</option></select></td><td><select class="fi" style="min-width:66px"><option>Yes</option><option>No</option><option>Partial</option></select></td><td><select class="fi" style="min-width:82px"><option>Live</option><option>Submitted</option><option>Pending</option><option>Rejected</option></select></td><td contenteditable>—</td></tr>
+      </tbody>
+    </table></div>
+    <button class="addbtn" onclick="addOP()">+ Add row</button>
+  </div>
+  <div class="dvdr"></div>
+  <div class="sec">
+    <p class="sec-label">E-E-A-T activities</p>
+    <div class="tw"><table>
+      <thead><tr><th>Activity</th><th>Type</th><th>Platform</th><th>Industry</th><th>Status</th><th>Notes</th></tr></thead>
+      <tbody id="eatbody">
+        <tr><td contenteditable>Nuclear pump FEA under ASME Section III</td><td><select class="fi" style="min-width:108px"><option>Case study</option><option>Technical article</option><option>Industry content</option></select></td><td contenteditable>Hashnode</td><td contenteditable>Nuclear</td><td><select class="fi" style="min-width:82px"><option>Published</option><option>In progress</option><option>Planned</option></select></td><td contenteditable>—</td></tr>
+        <tr><td contenteditable>Industry-focused content</td><td><select class="fi" style="min-width:108px"><option>Industry content</option><option>Case study</option><option>Technical article</option></select></td><td contenteditable>LinkedIn</td><td contenteditable>Oil and gas</td><td><select class="fi" style="min-width:82px"><option>Published</option><option>In progress</option><option>Planned</option></select></td><td contenteditable>—</td></tr>
+      </tbody>
+    </table></div>
+    <button class="addbtn" onclick="addEAT()">+ Add activity</button>
+  </div>
+  <div class="dvdr"></div>
+  <div class="sec">
+    <p class="sec-label">Disavow log</p>
+    <div class="egrid">
+      <div class="fg"><span class="fl">Spam domains identified</span><input class="fi" type="number" placeholder="14"/></div>
+      <div class="fg"><span class="fl">Disavow file submitted to GSC</span><select class="fi"><option>Yes</option><option>No</option><option>Pending</option></select></div>
+      <div class="fg" style="grid-column:1/-1"><span class="fl">Notes — GSC replaces entire file on each upload. Always maintain a cumulative master file.</span><textarea class="fi" placeholder="Spam source types, submission date, next review date"></textarea></div>
+    </div>
+  </div>
+</div><!-- /pnl-inner -->
+</div>
+
+<!-- === RECRUITMENT ========== -->
+<div class="pnl" id="tab-recruit">
+<div class="pnl-inner">
+<div class="sec">
+    <p class="sec-label">Recruitment support — this month</p>
+    <div class="tw"><table>
+      <thead><tr><th style="min-width:128px">Role</th><th>Source</th><th>Leads received</th><th>Leads delivered</th><th>Status</th><th style="min-width:128px">Remarks</th></tr></thead>
+      <tbody id="rcbody">
+        <tr><td contenteditable>FEA Engineer</td><td><select class="fi" style="min-width:98px"><option>LinkedIn</option><option>Website form</option><option>Naukri</option><option>Indeed</option><option>Referral</option><option>Other</option></select></td><td contenteditable>—</td><td contenteditable>—</td><td><select class="fi" style="min-width:88px"><option>In progress</option><option>Delivered</option><option>Closed</option><option>On hold</option></select></td><td contenteditable>—</td></tr>
+        <tr><td contenteditable>CFD Engineer</td><td><select class="fi" style="min-width:98px"><option>LinkedIn</option><option>Website form</option><option>Naukri</option><option>Indeed</option><option>Referral</option><option>Other</option></select></td><td contenteditable>—</td><td contenteditable>—</td><td><select class="fi" style="min-width:88px"><option>In progress</option><option>Delivered</option><option>Closed</option><option>On hold</option></select></td><td contenteditable>—</td></tr>
+      </tbody>
+    </table></div>
+    <button class="addbtn" onclick="addRC()">+ Add role</button>
+  </div>
+  <div class="dvdr"></div>
+  <div class="sec">
+    <p class="sec-label">Summary numbers</p>
+    <div class="egrid">
+      <div class="fg"><span class="fl">Total roles supported</span><input class="fi" type="number" placeholder="2"/></div>
+      <div class="fg"><span class="fl">Total leads delivered</span><input class="fi" type="number" placeholder="5"/></div>
+      <div class="fg"><span class="fl">Primary channel</span><input class="fi" placeholder="LinkedIn"/></div>
+      <div class="fg"><span class="fl">Roles closed / hired</span><input class="fi" type="number" placeholder="0"/></div>
+      <div class="fg" style="grid-column:1/-1"><span class="fl">Notes for management</span><textarea class="fi" placeholder="e.g. FEA hiring ongoing – 3 shortlisted profiles sent for technical review."></textarea></div>
+    </div>
+  </div>
+</div><!-- /pnl-inner -->
+</div>
+
+<!-- === SUMMARY ========== -->
+<div class="pnl" id="tab-summary">
+<div class="pnl-inner">
+<div class="sec">
+    <p class="sec-label">Management summary — auto-generated from your data, review and accept</p>
+
+    <div class="sblock" id="sb-work">
+      <h3>&#10003; Key work done this month</h3>
+      <textarea class="fi" id="st-work" rows="3" placeholder="Click Generate to auto-fill from your data..."></textarea>
+      <div class="sblock-actions">
+        <button class="gen-btn" onclick="genSummary('work')">&#9889; Generate</button>
+        <button class="accept-btn" id="ab-work" onclick="acceptSummary('work')">&#10003; Accept</button>
+        <button class="edit-btn" id="eb-work" onclick="editSummary('work')">&#9998; Edit</button>
+        <span class="accepted-badge" id="acc-work">&#10003; Final version</span>
+      </div>
+    </div>
+
+    <div class="sblock" id="sb-results">
+      <h3>&#8593; Results and performance</h3>
+      <textarea class="fi" id="st-results" rows="3" placeholder="Click Generate to auto-fill from your data..."></textarea>
+      <div class="sblock-actions">
+        <button class="gen-btn" onclick="genSummary('results')">&#9889; Generate</button>
+        <button class="accept-btn" id="ab-results" onclick="acceptSummary('results')">&#10003; Accept</button>
+        <button class="edit-btn" id="eb-results" onclick="editSummary('results')">&#9998; Edit</button>
+        <span class="accepted-badge" id="acc-results">&#10003; Final version</span>
+      </div>
+    </div>
+
+    <div class="sblock" id="sb-pending">
+      <h3>&#9201; Pending items</h3>
+      <textarea class="fi" id="st-pending" rows="3" placeholder="Enter pending items or click Generate..."></textarea>
+      <div class="sblock-actions">
+        <button class="gen-btn" onclick="genSummary('pending')">&#9889; Generate</button>
+        <button class="accept-btn" id="ab-pending" onclick="acceptSummary('pending')">&#10003; Accept</button>
+        <button class="edit-btn" id="eb-pending" onclick="editSummary('pending')">&#9998; Edit</button>
+        <span class="accepted-badge" id="acc-pending">&#10003; Final version</span>
+      </div>
+    </div>
+
+    <div class="sblock" id="sb-next">
+      <h3>&#8594; Next month priorities</h3>
+      <textarea class="fi" id="st-next" rows="3" placeholder="Enter priorities or click Generate..."></textarea>
+      <div class="sblock-actions">
+        <button class="gen-btn" onclick="genSummary('next')">&#9889; Generate</button>
+        <button class="accept-btn" id="ab-next" onclick="acceptSummary('next')">&#10003; Accept</button>
+        <button class="edit-btn" id="eb-next" onclick="editSummary('next')">&#9998; Edit</button>
+        <span class="accepted-badge" id="acc-next">&#10003; Final version</span>
+      </div>
+    </div>
+
+    <div class="sblock" id="sb-enquiry">
+      <h3>&#128140; Enquiries and business impact</h3>
+      <div class="egrid" style="margin-bottom:10px">
+        <div class="fg"><span class="fl">Enquiries this month</span><input class="fi" id="ienq" type="number" placeholder="3"/></div>
+        <div class="fg"><span class="fl">Source</span><input class="fi" id="ienqsrc" placeholder="Website / LinkedIn / GMB"/></div>
+        <div class="fg"><span class="fl">Region</span><input class="fi" placeholder="USA / UK / UAE / Canada"/></div>
+        <div class="fg"><span class="fl">Service type</span><input class="fi" placeholder="FEA / CFD / API 579"/></div>
+      </div>
+    </div>
+  </div>
+</div><!-- /pnl-inner -->
+</div>
+
+<!-- === DATA GUIDE ========== -->
+<div class="pnl" id="tab-guide">
+<div class="pnl-inner">
+<div class="sec">
+    <p class="sec-label">KPI coverage — all categories from your framework</p>
+    <div class="kpi-cov-grid">
+      <div class="cov-group"><div class="cov-group-title">Website SEO</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Pages optimized</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Meta title and description</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Internal linking</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Technical SEO fixes</div>
+      </div>
+      <div class="cov-group"><div class="cov-group-title">GSC Performance</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Total clicks and impressions</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>CTR and avg. position</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Branded and non-branded keywords</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Keywords in top 10 and top 20</div>
+      </div>
+      <div class="cov-group"><div class="cov-group-title">GA4 Website</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Organic search sessions</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Engagement rate and avg. time</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Key events and form fills</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Landing page performance</div>
+      </div>
+      <div class="cov-group"><div class="cov-group-title">Content Marketing</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Technical posts created</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Blogs and case studies promoted</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Content repurposing tracker</div>
+      </div>
+      <div class="cov-group"><div class="cov-group-title">LinkedIn</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Content impressions and engagement</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Follower growth</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Page views</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Button and website clicks</div>
+      </div>
+      <div class="cov-group"><div class="cov-group-title">GMB / E-E-A-T / Impact</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Profile views, calls, website clicks</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Month-on-month GMB comparison</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Case study and technical content</div>
+        <div class="cov-item"><div class="cov-chk">&#10003;</div>Enquiry support tracking</div>
+      </div>
+    </div>
+  </div>
+  <div class="dvdr"></div>
+  <div class="sec">
+    <p class="sec-label">Where to find each metric</p>
+    <div class="guide-row guide-hdr" style="padding-bottom:8px"><span>Metric</span><span>Where to find it</span><span>Source</span></div>
+    <div class="guide-row"><div style="font-size:13px;font-weight:500;color:var(--text)">GSC clicks, impressions, CTR, avg. position</div><div style="font-size:12.5px;color:var(--text2)">Search Console → Performance → Search results. Set date to full month.</div><div><span class="badge b-gsc">Search Console</span></div></div>
+    <div class="guide-row"><div style="font-size:13px;font-weight:500;color:var(--text)">Keyword positions — branded and non-branded</div><div style="font-size:12.5px;color:var(--text2)">GSC → Performance → Queries. Filter by keyword. Note average position at month end.</div><div><span class="badge b-gsc">Search Console</span></div></div>
+    <div class="guide-row"><div style="font-size:13px;font-weight:500;color:var(--text)">GA4 sessions, engagement rate, avg. time</div><div style="font-size:12.5px;color:var(--text2)">GA4 → Reports → Acquisition → Traffic acquisition. Filter by Organic Search channel.</div><div><span class="badge b-ga">Google Analytics</span></div></div>
+    <div class="guide-row"><div style="font-size:13px;font-weight:500;color:var(--text)">Key events and landing page performance</div><div style="font-size:12.5px;color:var(--text2)">GA4 → Engagement → Events (form_submit). Landing pages under Engagement → Landing page.</div><div><span class="badge b-ga">Google Analytics</span></div></div>
+    <div class="guide-row"><div style="font-size:13px;font-weight:500;color:var(--text)">LinkedIn impressions, engagement, followers, button clicks</div><div style="font-size:12.5px;color:var(--text2)">LinkedIn Page → Analytics → Visitors and Updates. Select full month date range.</div><div><span class="badge b-li">LinkedIn</span></div></div>
+    <div class="guide-row"><div style="font-size:13px;font-weight:500;color:var(--text)">GMB views, website clicks, direction requests, calls</div><div style="font-size:12.5px;color:var(--text2)">Google Business Profile → Performance. Set monthly range, note each action type.</div><div><span class="badge b-gmb">GMB</span></div></div>
+    <div class="guide-row"><div style="font-size:13px;font-weight:500;color:var(--text)">Backlinks added, pages optimized, content count</div><div style="font-size:12.5px;color:var(--text2)">Count from Off-page, Work log, and Content tabs in this report. Verify in Ahrefs or GSC Links.</div><div><span class="badge b-man">Manual</span></div></div>
+    <div class="guide-row" style="border-bottom:none"><div style="font-size:13px;font-weight:500;color:var(--text)">Recruitment leads</div><div style="font-size:12.5px;color:var(--text2)">Count from WhatsApp or email threads. Note role name, source, and profiles sent.</div><div><span class="badge b-man">Manual</span></div></div>
+  </div>
+</div>
+</div>
+</div>
+</div>
+<script>
+
+/* ============================================================
+   MONTH DATA STORE
+============================================================ */
+/* ============================================================
+   PERSISTENT STORAGE — localStorage
+   Survives refresh, tab close, and browser restart.
+   Key format: acae_{MonthYear}_{section}
+============================================================ */
+var CUR = 'Jun 2026';
+var INPUT_IDS = ['iclk','iclkp','iimp','iimpp','ictr','ictrp','ipos','iposp',
+                 'ises','isesp','ilin','ilinp','ibkl','icnt',
+                 'igmbv','igmbvp','igmbw','igmbwp','igmbd','igmbdp','igmbc','igmbcp'];
+var PREV_MAP = {iclk:'iclkp',iimp:'iimpp',ictr:'ictrp',ipos:'iposp',
+               ises:'isesp',ilin:'ilinp',igmbv:'igmbvp',igmbw:'igmbwp',
+               igmbd:'igmbdp',igmbc:'igmbcp'};
+var TABLE_IDS = ['perfTable','kwbody','ctbody','rpbody','seobody','opbody','eatbody','rcbody','wlbody'];
+var SUMMARY_KEYS = ['work','results','pending','next'];
+var _saveTimer = null;
+
+function lsKey(month, section) {
+  return 'acae_' + month.replace(' ', '') + '_' + section;
+}
+
+/* SAVE all data for current month */
+function saveMonth() {
+  var month = CUR;
+
+  /* 1. Numeric inputs */
+  var inputs = {};
+  INPUT_IDS.forEach(function(id) {
+    var e = document.getElementById(id); if (e) inputs[id] = e.value;
+  });
+  try { localStorage.setItem(lsKey(month,'inputs'), JSON.stringify(inputs)); } catch(e){}
+
+  /* 2. Table HTML — captures added rows, selects, contenteditable text */
+  var tables = {};
+  TABLE_IDS.forEach(function(id) {
+    var el = document.getElementById(id); if (el) tables[id] = el.innerHTML;
+  });
+  try { localStorage.setItem(lsKey(month,'tables'), JSON.stringify(tables)); } catch(e){}
+
+  /* 3. Summary textareas + accepted state */
+  var summary = {};
+  SUMMARY_KEYS.forEach(function(k) {
+    var ta = document.getElementById('st-' + k);
+    var sb = document.getElementById('sb-' + k);
+    summary[k] = {
+      text:     ta ? ta.value : '',
+      disabled: ta ? ta.disabled : false,
+      accepted: sb ? sb.classList.contains('accepted') : false
+    };
+  });
+  try { localStorage.setItem(lsKey(month,'summary'), JSON.stringify(summary)); } catch(e){}
+
+  showSavedToast();
+}
+
+/* LOAD all data for a given month */
+function loadMonth(month) {
+  /* 1. Inputs */
+  try {
+    var r = localStorage.getItem(lsKey(month,'inputs'));
+    if (r) {
+      var d = JSON.parse(r);
+      INPUT_IDS.forEach(function(id) {
+        var e = document.getElementById(id);
+        if (e) e.value = (d[id] !== undefined) ? d[id] : '';
+      });
+    } else {
+      INPUT_IDS.forEach(function(id) { var e=document.getElementById(id); if(e) e.value=''; });
+    }
+  } catch(e){}
+
+  /* 2. Tables */
+  try {
+    var r2 = localStorage.getItem(lsKey(month,'tables'));
+    if (r2) {
+      var t = JSON.parse(r2);
+      TABLE_IDS.forEach(function(id) {
+        var el = document.getElementById(id); if (el && t[id]) el.innerHTML = t[id];
+      });
+    }
+  } catch(e){}
+
+  /* 3. Summary */
+  try {
+    var r3 = localStorage.getItem(lsKey(month,'summary'));
+    if (r3) {
+      var s = JSON.parse(r3);
+      SUMMARY_KEYS.forEach(function(k) {
+        var d = s[k]; if (!d) return;
+        var ta  = document.getElementById('st-'  + k);
+        var sb  = document.getElementById('sb-'  + k);
+        var ab  = document.getElementById('ab-'  + k);
+        var eb  = document.getElementById('eb-'  + k);
+        var acc = document.getElementById('acc-' + k);
+        if (ta) { ta.value = d.text || ''; ta.disabled = !!d.disabled; }
+        if (d.accepted) {
+          if (sb)  sb.classList.add('accepted');
+          if (ab)  ab.classList.remove('show');
+          if (eb)  eb.classList.add('show');
+          if (acc) acc.classList.add('show');
+        } else {
+          if (sb)  sb.classList.remove('accepted');
+          if (acc) acc.classList.remove('show');
+          if (eb)  eb.classList.remove('show');
+          if (ta && ta.value && ab) ab.classList.add('show');
+        }
+      });
+    } else {
+      SUMMARY_KEYS.forEach(function(k) {
+        var ta=document.getElementById('st-'+k), sb=document.getElementById('sb-'+k);
+        var ab=document.getElementById('ab-'+k), eb=document.getElementById('eb-'+k);
+        var acc=document.getElementById('acc-'+k);
+        if(ta){ta.value='';ta.disabled=false;}
+        if(sb) sb.classList.remove('accepted');
+        if(ab) ab.classList.remove('show');
+        if(eb) eb.classList.remove('show');
+        if(acc) acc.classList.remove('show');
+      });
+    }
+  } catch(e){}
+}
+
+/* AUTO-SAVE: debounced 900ms after last change */
+function scheduleSave() {
+  clearTimeout(_saveTimer);
+  _saveTimer = setTimeout(saveMonth, 900);
+}
+
+/* MONTH CHANGE */
+function onMonthChange() {
+  saveMonth();
+  var sel = document.getElementById('msel').value;
+  var months = ['Jan 2026','Feb 2026','Mar 2026','Apr 2026','May 2026','Jun 2026',
+                'Jul 2026','Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026'];
+  var idx = months.indexOf(sel);
+  CUR = sel;
+  loadMonth(sel);
+
+  /* Auto-fill "last month" fields from previous month's saved data */
+  if (idx > 0) {
+    try {
+      var pr = localStorage.getItem(lsKey(months[idx-1],'inputs'));
+      if (pr) {
+        var pd = JSON.parse(pr);
+        Object.keys(PREV_MAP).forEach(function(thisId) {
+          var prevId = PREV_MAP[thisId], e = document.getElementById(prevId);
+          if (e && (!e.value || e.value==='') && pd[thisId]) e.value = pd[thisId];
+        });
+      }
+    } catch(e){}
+  }
+  upd(); updGMB();
+  buildHistorySidebar();
+}
+
+/* SAVED TOAST */
+function showSavedToast() {
+  var t = document.getElementById('savedToast'); if (!t) return;
+  t.classList.add('show');
+  clearTimeout(t._tmr);
+  t._tmr = setTimeout(function(){ t.classList.remove('show'); }, 1800);
+}
+
+/* BUILD SAVED-MONTHS HISTORY SIDEBAR */
+function buildHistorySidebar() {
+  var sidebar = document.getElementById('historySidebar');
+  var wrap    = document.getElementById('historyWrap');
+  if (!sidebar || !wrap) return;
+  var months = ['Jan 2026','Feb 2026','Mar 2026','Apr 2026','May 2026','Jun 2026',
+                'Jul 2026','Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026'];
+  sidebar.innerHTML = '';
+  var count = 0;
+  months.forEach(function(m) {
+    var has = false;
+    try { has = localStorage.getItem(lsKey(m,'inputs')) !== null; } catch(e){}
+    if (has) {
+      count++;
+      var btn = document.createElement('button');
+      btn.className = 'hist-btn' + (m === CUR ? ' active' : '');
+      btn.innerHTML = '<span class="hist-month">' + m + '</span><span class="hist-dot"></span>';
+      btn.title = 'Switch to ' + m;
+      btn.onclick = (function(month){ return function(){
+        document.getElementById('msel').value = month;
+        onMonthChange();
+      }; })(m);
+      sidebar.appendChild(btn);
+    }
+  });
+  wrap.style.display = count > 0 ? 'flex' : 'none';
+}
+
+/* EXPORT all months to JSON file */
+function exportAllData() {
+  var months = ['Jan 2026','Feb 2026','Mar 2026','Apr 2026','May 2026','Jun 2026',
+                'Jul 2026','Aug 2026','Sep 2026','Oct 2026','Nov 2026','Dec 2026'];
+  var all = {};
+  months.forEach(function(m) {
+    var md = {}; var has = false;
+    ['inputs','tables','summary'].forEach(function(s){
+      try{ var r=localStorage.getItem(lsKey(m,s)); if(r){md[s]=JSON.parse(r);has=true;} }catch(e){}
+    });
+    if(has) all[m] = md;
+  });
+  var blob = new Blob([JSON.stringify(all,null,2)],{type:'application/json'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'AnalyzerCAE_Reports_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+}
+
+/* CLEAR current month */
+function clearMonthData() {
+  if (!confirm('Clear all saved data for ' + CUR + '? This cannot be undone.')) return;
+  ['inputs','tables','summary'].forEach(function(s){
+    try{ localStorage.removeItem(lsKey(CUR,s)); }catch(e){}
+  });
+  INPUT_IDS.forEach(function(id){ var e=document.getElementById(id); if(e) e.value=''; });
+  SUMMARY_KEYS.forEach(function(k){
+    var ta=document.getElementById('st-'+k), sb=document.getElementById('sb-'+k);
+    if(ta){ta.value='';ta.disabled=false;}
+    if(sb) sb.classList.remove('accepted');
+    ['ab-','eb-','acc-'].forEach(function(p){ var e=document.getElementById(p+k); if(e) e.classList.remove('show'); });
+  });
+  upd(); updGMB(); buildHistorySidebar();
+}
+
+/* INIT: called after loader finishes */
+function initStorage() {
+  loadMonth(CUR);
+  buildHistorySidebar();
+}
+
+/* ============================================================
+   HELPERS
+============================================================ */
+function v(id) { var e = document.getElementById(id); return e ? e.value : ''; }
+function vn(id) { return parseFloat(v(id)) || 0; }
+function fmt(n) {
+  if (n === '' || n === null || n === undefined) return '\u2014';
+  var x = parseFloat(n); if (isNaN(x)) return '\u2014';
+  return x >= 1000000 ? (x/1000000).toFixed(1)+'M' : x >= 1000 ? (x/1000).toFixed(1)+'K' : String(Math.round(x));
+}
+function pctChg(a, b) {
+  var c = parseFloat(a), p = parseFloat(b);
+  if (isNaN(c) || isNaN(p) || p === 0 || a === '' || b === '') return null;
+  return (c - p) / p * 100;
+}
+function setD(did, p, lowerBetter) {
+  var e = document.getElementById(did); if (!e || p === null) return;
+  var up = p >= 0, good = lowerBetter ? !up : up;
+  e.textContent = (up ? '\u25b2' : '\u25bc') + Math.abs(p).toFixed(1) + '% vs last month';
+  e.className = 'kdelta ' + (good ? 'up' : 'dn');
+}
+function morphVal(id, txt) {
+  var e = document.getElementById(id); if (!e || e.textContent === txt) return;
+  e.classList.remove('animating'); void e.offsetWidth;
+  e.textContent = txt; e.classList.add('animating');
+  setTimeout(function() { e.classList.remove('animating'); }, 440);
+}
+
+/* ============================================================
+   CHARTS
+============================================================ */
+var cmpChart, gscChart, gmbChart;
+var CD = {
+  plugins: {
+    legend: { display: false },
+    tooltip: {
+      backgroundColor: 'rgba(10,12,20,0.97)', borderColor: 'rgba(232,83,26,0.16)', borderWidth: 1,
+      titleColor: '#dde1ec', bodyColor: '#8b93aa', padding: 12, cornerRadius: 10,
+      titleFont: { family: 'Space Grotesk', weight: '600', size: 12 },
+      bodyFont: { family: 'Inter', size: 12 }
+    }
+  },
+  scales: {
+    x: { grid: { display: false }, ticks: { color: '#505870', font: { size: 11, family: 'Inter' } }, border: { display: false } },
+    y: { grid: { color: 'rgba(255,255,255,0.032)' }, border: { display: false },
+         ticks: { color: '#505870', font: { size: 11, family: 'Inter' },
+                  callback: function(val) { return val >= 1000000 ? (val/1000000).toFixed(1)+'M' : val >= 1000 ? (val/1000).toFixed(0)+'K' : val; } } }
+  },
+  responsive: true, maintainAspectRatio: false
+};
+function initCharts() {
+  Chart.defaults.font.family = 'Inter';
+  var c1 = document.getElementById('cmpChart');
+  if (c1) cmpChart = new Chart(c1, { type: 'bar', data: {
+    labels: ['GSC Clicks','GA4 Sessions','LI Impressions','Impressions'],
+    datasets: [
+      { label: 'This month', data: [0,0,0,0], backgroundColor: 'rgba(232,83,26,0.82)', borderRadius: 5, borderSkipped: 'bottom', barPercentage: 0.44, categoryPercentage: 0.72 },
+      { label: 'Last month',  data: [0,0,0,0], backgroundColor: 'rgba(55,60,88,0.7)',   borderRadius: 5, borderSkipped: 'bottom', barPercentage: 0.44, categoryPercentage: 0.72 }
+    ]}, options: CD });
+  var c2 = document.getElementById('gscChart');
+  if (c2) gscChart = new Chart(c2, { type: 'bar', data: {
+    labels: ['Jan','Feb','Mar','Apr','May','Jun'],
+    datasets: [
+      { label: 'Clicks',      data: [0,0,0,0,0,0], backgroundColor: 'rgba(232,83,26,0.82)', borderRadius: 4, borderSkipped: 'bottom', barPercentage: 0.5, categoryPercentage: 0.72 },
+      { label: 'Impressions', data: [0,0,0,0,0,0], backgroundColor: 'rgba(55,60,88,0.65)', borderRadius: 4, borderSkipped: 'bottom', barPercentage: 0.5, categoryPercentage: 0.72 }
+    ]}, options: CD });
+  var c3 = document.getElementById('gmbChart');
+  if (c3) gmbChart = new Chart(c3, { type: 'bar', data: {
+    labels: ['Profile views','Website clicks','Directions','Calls'],
+    datasets: [
+      { label: 'This month', data: [0,0,0,0], backgroundColor: 'rgba(232,83,26,0.82)', borderRadius: 5, borderSkipped: 'bottom', barPercentage: 0.44, categoryPercentage: 0.72 },
+      { label: 'Last month',  data: [0,0,0,0], backgroundColor: 'rgba(55,60,88,0.7)',  borderRadius: 5, borderSkipped: 'bottom', barPercentage: 0.44, categoryPercentage: 0.72 }
+    ]}, options: CD });
+  var pt = document.getElementById('perfTable');
+  if (pt) pt.addEventListener('blur', function() {
+    if (!gscChart) return;
+    var rows = pt.querySelectorAll('tbody tr'), labels = [], clicks = [], imps = [];
+    rows.forEach(function(r) {
+      var c = r.querySelectorAll('td');
+      labels.push(c[0] ? c[0].textContent.trim().slice(0,6) : '');
+      clicks.push(parseFloat(c[1] ? c[1].textContent : 0) || 0);
+      imps.push(parseFloat(c[2] ? c[2].textContent : 0) || 0);
+    });
+    gscChart.data.labels = labels; gscChart.data.datasets[0].data = clicks; gscChart.data.datasets[1].data = imps; gscChart.update();
+  }, true);
+}
+
+/* ============================================================
+   UPDATE KPIs
+============================================================ */
+var _prevWins = 0;
+function upd() {
+  saveMonth();
+  var clk=v('iclk'),clkp=v('iclkp'),imp=v('iimp'),impp=v('iimpp'),
+      ctr=v('ictr'),ctrp=v('ictrp'),pos=v('ipos'),posp=v('iposp'),
+      ses=v('ises'),sesp=v('isesp'),lin=v('ilin'),linp=v('ilinp');
+  morphVal('vclk', fmt(clk)); morphVal('vimp', fmt(imp));
+  if (parseFloat(ctr)) morphVal('vctr', parseFloat(ctr).toFixed(1)+'%');
+  if (parseFloat(pos)) morphVal('vpos', parseFloat(pos).toFixed(1));
+  morphVal('vses', fmt(ses)); morphVal('vlin', fmt(lin));
+  if (v('ibkl')) morphVal('vbkl', v('ibkl'));
+  if (v('icnt')) morphVal('vcnt', v('icnt'));
+  setD('dclk', pctChg(clk,clkp), false); setD('dimp', pctChg(imp,impp), false);
+  setD('dctr', pctChg(ctr,ctrp), false); setD('dpos', pctChg(pos,posp), true);
+  setD('dses', pctChg(ses,sesp), false); setD('dlin', pctChg(lin,linp), false);
+  if (cmpChart) {
+    cmpChart.data.datasets[0].data = [+clk||0, +ses||0, +lin||0, +imp||0];
+    cmpChart.data.datasets[1].data = [+clkp||0, +sesp||0, +linp||0, +impp||0];
+    cmpChart.update();
+    if (clk || ses || lin) document.getElementById('insightRow').style.display = 'grid';
+  }
+  var deltas = [
+    { name:'GSC clicks',    p:pctChg(clk,clkp),  good:true  },
+    { name:'Impressions',   p:pctChg(imp,impp),  good:true  },
+    { name:'CTR',           p:pctChg(ctr,ctrp),  good:true  },
+    { name:'Avg. position', p:pctChg(pos,posp),  good:false },
+    { name:'GA4 sessions',  p:pctChg(ses,sesp),  good:true  },
+    { name:'LI impressions',p:pctChg(lin,linp),  good:true  }
+  ].filter(function(d) { return d.p !== null; });
+  var wins = deltas.filter(function(d) { return d.good ? d.p > 0 : d.p < 0; }).sort(function(a,b) { return Math.abs(b.p)-Math.abs(a.p); });
+  var loss = deltas.filter(function(d) { return d.good ? d.p < 0 : d.p > 0; }).sort(function(a,b) { return Math.abs(b.p)-Math.abs(a.p); });
+  var wc = wins.length;
+  document.getElementById('ins1').textContent = wins.length ? wins[0].name+' improved by '+Math.abs(wins[0].p).toFixed(1)+'% \u2014 strongest gain this month.' : 'Enter data to see your top win.';
+  document.getElementById('ins2').textContent = loss.length ? loss[0].name+' dropped by '+Math.abs(loss[0].p).toFixed(1)+'% \u2014 worth reviewing.' : 'No notable declines this month.';
+  document.getElementById('ins3').textContent = wc+' of '+deltas.length+' tracked metrics improved vs last month.';
+  if (wc >= 3 && _prevWins < 3) launchConfetti();
+  _prevWins = wc;
+}
+function updGMB() {
+  saveMonth();
+  var vals = [vn('igmbv'),vn('igmbw'),vn('igmbd'),vn('igmbc')];
+  var prev = [vn('igmbvp'),vn('igmbwp'),vn('igmbdp'),vn('igmbcp')];
+  var has = vals.some(function(x) { return x > 0; });
+  document.getElementById('gmbChartBox').style.display = has ? 'block' : 'none';
+  if (gmbChart) { gmbChart.data.datasets[0].data = vals; gmbChart.data.datasets[1].data = prev; gmbChart.update(); }
+}
+
+/* ============================================================
+   TABS — pure CSS animation, NO inline style override in JS
+============================================================ */
+function sw(name, el) {
+  document.querySelectorAll('.tab').forEach(function(t) { t.classList.remove('on'); });
+  document.querySelectorAll('.pnl').forEach(function(p) { p.classList.remove('on'); });
+  el.classList.add('on');
+  var target = document.getElementById('tab-' + name);
+  if (target) target.classList.add('on');
+  requestAnimationFrame(posInk);
+}
+function posInk() {
+  var active = document.querySelector('.tab.on');
+  var ink = document.getElementById('tabInk');
+  if (!active || !ink) return;
+  var tr = document.querySelector('.tab-row').getBoundingClientRect();
+  var ar = active.getBoundingClientRect();
+  ink.style.left = (ar.left - tr.left) + 'px';
+  ink.style.width = ar.width + 'px';
+}
+window.addEventListener('resize', posInk, { passive: true });
+
+/* Auto-save on contenteditable changes and select changes in tables */
+document.addEventListener('input', function(e) {
+  if (e.target.hasAttribute('contenteditable') || e.target.tagName === 'SELECT' || e.target.tagName === 'TEXTAREA') {
+    scheduleSave();
+  }
+}, { passive: true });
+document.addEventListener('change', function(e) {
+  if (e.target.tagName === 'SELECT') scheduleSave();
+}, { passive: true });
+
+/* ============================================================
+   QUICK CARD — only opens on explicit click, never on init
+============================================================ */
+var QCD = {
+  clicks:     { icon:'&#9654;',   label:'GSC Clicks',      vid:'vclk', did:'dclk', desc:'Counts clicks from Google search results to your website. Higher clicks mean more engineers and project managers reaching your FEA, CFD, or API 579 pages. Each click is a potential enquiry from markets like the USA, UK, UAE, and Canada.' },
+  impressions:{ icon:'&#128065;', label:'Impressions',      vid:'vimp', did:'dimp', desc:'How many times your pages appeared in Google results. Growing impressions show Google is recognising your content for more engineering searches. This builds brand presence in target markets before a click even happens.' },
+  ctr:        { icon:'%',         label:'Avg. CTR',         vid:'vctr', did:'dctr', desc:'The share of impressions that turned into clicks. Even a 0.5% improvement on high-impression queries adds hundreds of monthly visitors. Strong page titles and descriptions drive this — good meta work has a direct and measurable effect.' },
+  position:   { icon:'#',         label:'Avg. Position',    vid:'vpos', did:'dpos', desc:'Your average ranking across all queries. Lower is better. Moving from position 22 to 18 moves pages closer to page one where clicks increase sharply. On-page SEO and consistent content work are the main levers.' },
+  sessions:   { icon:'&#128100;', label:'GA4 Sessions',     vid:'vses', did:'dses', desc:'Total website visits in Google Analytics. Each organic session is a potential enquiry from someone actively searching for structural analysis, FEA, CFD, or fitness-for-service support.' },
+  linkedin:   { icon:'in',        label:'LinkedIn Reach',   vid:'vlin', did:'dlin', desc:'Total impressions on Analyzer CAE company posts. LinkedIn reaches engineers, procurement managers, and R&D heads directly. Consistent reach builds brand recall with decision-makers who are more likely to reach out when they need simulation support.' },
+  backlinks:  { icon:'&#128279;', label:'Backlinks Added',  vid:'vbkl', did:'dbkl', desc:'New directory listings or inbound links created this month. Backlinks build domain authority gradually. USA and Canada-based listings specifically help with regional search visibility. Impact compounds over time.' },
+  content:    { icon:'&#128196;', label:'Content Pieces',   vid:'vcnt', did:'dcnt', desc:'Total pieces published across LinkedIn, blogs, Hashnode, and forums. Regular technical content builds E-E-A-T and helps rank for long-tail engineering keywords. It also keeps Analyzer CAE visible to engineers who research before buying.' }
+};
+function openQC(key) {
+  var d = QCD[key]; if (!d) return;
+  document.getElementById('qcIcon').innerHTML = d.icon;
+  document.getElementById('qcLabel').textContent = d.label;
+  var ve = document.getElementById(d.vid);
+  document.getElementById('qcVal').textContent = ve ? ve.textContent : '\u2014';
+  var de = document.getElementById(d.did), qd = document.getElementById('qcDelta');
+  if (de) { qd.textContent = de.textContent; qd.className = 'qc-delta ' + (de.className.includes('up') ? 'up' : de.className.includes('dn') ? 'dn' : 'flat'); }
+  document.getElementById('qcDesc').textContent = d.desc;
+  document.getElementById('qcOverlay').classList.add('open');
+  document.getElementById('qcPopup').classList.add('open');
+}
+function closeQC() {
+  document.getElementById('qcOverlay').classList.remove('open');
+  document.getElementById('qcPopup').classList.remove('open');
+}
+document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeQC(); });
+
+/* ============================================================
+   AUTO SUMMARY
+============================================================ */
+function genSummary(type) {
+  var clk=vn('iclk'),clkp=vn('iclkp'),imp=vn('iimp'),impp=vn('iimpp');
+  var ctr=parseFloat(v('ictr'))||0, pos=parseFloat(v('ipos'))||0;
+  var ses=vn('ises'),sesp=vn('isesp'),lin=vn('ilin'),linp=vn('ilinp');
+  var bkl=vn('ibkl'), cnt=vn('icnt');
+  function pf(a,b) { var p=pctChg(a,b); return p ? Math.abs(p).toFixed(0)+'%' : null; }
+  var txt = '';
+  if (type === 'work') {
+    var parts = [];
+    if (cnt > 0) parts.push('Published '+cnt+' content piece'+(cnt>1?'s':'')+' across technical platforms');
+    if (bkl > 0) parts.push('added '+bkl+' new directory listing'+(bkl>1?'s':'')+' and backlinks');
+    var sc = 0;
+    document.querySelectorAll('#seobody tr').forEach(function(r) { var s=r.querySelectorAll('select'); if(s[6]&&(s[6].value==='Implemented'||s[6].value==='Monitoring'))sc++; });
+    if (sc > 0) parts.push('completed on-page SEO updates for '+sc+' website page'+(sc>1?'s':''));
+    txt = parts.length ? parts.map(function(p,i) { return i===0 ? p.charAt(0).toUpperCase()+p.slice(1) : p.charAt(0).toUpperCase()+p.slice(1); }).join('. ')+'.' : 'Enter work log data first, then click Generate.';
+  } else if (type === 'results') {
+    var parts = [];
+    var cp=pf(clk,clkp); if(cp) parts.push('GSC clicks '+(clk>=clkp?'up '+cp+' to ':' down '+cp+' to ')+clk.toLocaleString());
+    var ip=pf(imp,impp); if(ip&&imp>impp) parts.push('impressions up '+ip+' to '+imp.toLocaleString());
+    if(pos>0) parts.push('average position at '+pos.toFixed(1));
+    if(ctr>0) parts.push('CTR at '+ctr.toFixed(1)+'%');
+    var sp=pf(ses,sesp); if(sp&&ses>sesp) parts.push('GA4 sessions up '+sp+' to '+ses.toLocaleString());
+    var lp=pf(lin,linp); if(lp&&lin>linp) parts.push('LinkedIn reach up '+lp+' to '+lin.toLocaleString());
+    txt = parts.length ? parts.map(function(p,i){return i===0?p.charAt(0).toUpperCase()+p.slice(1):p;}).join('. ')+'.' : 'Enter KPI data above to auto-generate results.';
+  } else if (type === 'pending') {
+    txt = 'Check all updated pages are indexed correctly in GSC. Confirm schema markup is live. Review any pending 301 redirects. Continue monitoring the disavow file for new spam links.';
+  } else if (type === 'next') {
+    var parts = [];
+    if(pos>15) parts.push('Continue on-page improvements to push average position below 15');
+    if(bkl<5) parts.push('increase directory submissions for USA and Canada markets');
+    if(cnt<6) parts.push('aim for at least 6 content pieces including one technical article');
+    parts.push('review keyword rankings and update the SEO tracker for next month');
+    txt = parts.map(function(p){ return p.charAt(0).toUpperCase()+p.slice(1)+'.'; }).join(' ');
+  }
+  var ta=document.getElementById('st-'+type); if(ta){ta.value=txt;ta.disabled=false;}
+  var ab=document.getElementById('ab-'+type), eb=document.getElementById('eb-'+type);
+  var acc=document.getElementById('acc-'+type), sb=document.getElementById('sb-'+type);
+  if(ab)ab.classList.add('show'); if(eb)eb.classList.remove('show');
+  if(acc)acc.classList.remove('show'); if(sb)sb.classList.remove('accepted');
+}
+function acceptSummary(type) {
+  var ta=document.getElementById('st-'+type); if(ta)ta.disabled=true;
+  var ab=document.getElementById('ab-'+type); if(ab)ab.classList.remove('show');
+  var eb=document.getElementById('eb-'+type); if(eb)eb.classList.add('show');
+  var acc=document.getElementById('acc-'+type); if(acc)acc.classList.add('show');
+  var sb=document.getElementById('sb-'+type); if(sb)sb.classList.add('accepted');
+  scheduleSave();
+}
+function editSummary(type) {
+  var ta=document.getElementById('st-'+type); if(ta){ta.disabled=false;ta.focus();}
+  var ab=document.getElementById('ab-'+type); if(ab)ab.classList.add('show');
+  var eb=document.getElementById('eb-'+type); if(eb)eb.classList.remove('show');
+  var acc=document.getElementById('acc-'+type); if(acc)acc.classList.remove('show');
+  var sb=document.getElementById('sb-'+type); if(sb)sb.classList.remove('accepted');
+}
+
+/* ============================================================
+   WORK LOG AUTO IMPACT
+============================================================ */
+var IMAP = [
+  { kw:['on-page','onpage','meta','schema','h1','h2','title','description'], impact:'Helps Google understand the page topic. Supports ranking for target keywords and can improve click-through rate from search results. Impact is gradual \u2014 typically visible 4\u20138 weeks after indexing.' },
+  { kw:['backlink','directory','listing','citation','profile'], impact:'Adds an external reference to the website. Builds domain authority over time. No immediate traffic impact \u2014 value compounds as more listings go live.' },
+  { kw:['content','article','post','blog','hashnode','linkedin','forum'], impact:"Increases Analyzer CAE's presence for engineering-related searches. Technical content builds E-E-A-T and can attract engineers researching topics before making a decision." },
+  { kw:['keyword','research','analysis'], impact:'Identifies what potential clients are actually searching for. Ensures SEO and content work targets queries with real commercial intent.' },
+  { kw:['technical seo','crawl','sitemap','redirect','canonical','broken','404','speed'], impact:'Removes indexing blockers. Required for all other SEO work to function \u2014 without clean technical foundations, rankings will plateau regardless of content or links.' },
+  { kw:['gmb','google business','local'], impact:'Improves local and brand-name search visibility. Relevant when potential clients verify Analyzer CAE or search for engineering consultancies by region.' },
+  { kw:['disavow','spam','toxic'], impact:'Reduces risk from low-quality backlinks. Protective rather than growth-oriented \u2014 prevents potential penalties rather than actively improving rankings.' },
+  { kw:['competitor','competitive'], impact:'Provides context on where Analyzer CAE stands vs similar companies. Informs which keywords and pages are worth prioritising.' },
+  { kw:['recruitment','hiring','candidate'], impact:'Supports talent acquisition using digital channels. Reduces dependency on third-party recruiters for technical engineering roles.' }
+];
+function autoImpact(btn) {
+  var row = btn.closest('.wrow');
+  var act = (row.querySelector('input.fi') || {}).value || '';
+  var imp = row.querySelector('.impact-field'); if (!imp) return;
+  var found = null, al = act.toLowerCase();
+  for (var i = 0; i < IMAP.length; i++) {
+    for (var j = 0; j < IMAP[i].kw.length; j++) {
+      if (al.indexOf(IMAP[i].kw[j]) !== -1) { found = IMAP[i].impact; break; }
+    }
+    if (found) break;
+  }
+  if (!found) found = 'Contributes to overall digital marketing consistency. Long-term value depends on frequency and quality of execution.';
+  imp.value = found;
+  imp.style.borderColor = 'rgba(27,175,122,0.5)';
+  setTimeout(function() { imp.style.borderColor = ''; }, 2200);
+}
+
+/* ============================================================
+   ADD ROWS
+============================================================ */
+function addWL() {
+  var d = document.createElement('div'); d.className = 'wrow';
+  d.innerHTML = '<div><input class="fi" placeholder="Activity" style="width:100%"/></div><div><select class="fi"><option value="">&#8211;</option><option>Done</option><option>In progress</option><option>Planned</option></select></div><div><input class="fi" placeholder="Output"/></div><div class="wrow-impact-wrap"><input class="fi impact-field" placeholder="Business impact" style="padding-right:82px"/><button class="wl-gen-btn" onclick="autoImpact(this)">Auto impact</button></div>';
+  document.getElementById('wlbody').appendChild(d);
+}
+function cloneRow(id) {
+  var b = document.getElementById(id), r = b.rows[0].cloneNode(true);
+  r.querySelectorAll('[contenteditable]').forEach(function(c) { c.textContent = '\u2014'; });
+  r.querySelectorAll('select').forEach(function(s) { s.selectedIndex = 0; });
+  r.querySelectorAll('input.fi').forEach(function(i) { i.value = ''; });
+  b.appendChild(r);
+}
+function addKW()  { cloneRow('kwbody'); }
+function addCT()  { cloneRow('ctbody'); }
+function addRP()  { cloneRow('rpbody'); }
+function addSEO() { cloneRow('seobody'); }
+function addOP()  { cloneRow('opbody'); }
+function addEAT() { cloneRow('eatbody'); }
+function addRC()  { cloneRow('rcbody'); }
+
+/* ============================================================
+   CONFETTI
+============================================================ */
+var _lcf = 0;
+function launchConfetti() {
+  var now = Date.now(); if (now - _lcf < 5000) return; _lcf = now;
+  var cols = ['#E8531A','#ff6b35','#3d7cf4','#1baf7a','#f59e0b','#dde1ec'];
+  for (var i = 0; i < 46; i++) {
+    (function(i) {
+      setTimeout(function() {
+        var p = document.createElement('div'); p.className = 'cfp';
+        p.style.cssText = 'left:'+Math.random()*100+'vw;background:'+cols[Math.floor(Math.random()*cols.length)]+';width:'+(5+Math.random()*7)+'px;height:'+(9+Math.random()*10)+'px;animation-duration:'+(1.4+Math.random()*1.2).toFixed(2)+'s;animation-delay:'+(Math.random()*0.4).toFixed(2)+'s;border-radius:'+(Math.random()>0.5?'50%':'2px');
+        document.body.appendChild(p);
+        setTimeout(function() { if (p.parentNode) p.parentNode.removeChild(p); }, 3000);
+      }, i * 20);
+    })(i);
+  }
+}
+
+/* ============================================================
+   CURSOR + SCROLL + WAVE
+============================================================ */
+var cg = document.getElementById('curGlow');
+document.addEventListener('mousemove', function(e) {
+  cg.style.left = e.clientX + 'px'; cg.style.top = e.clientY + 'px';
+  document.querySelectorAll('.plx[data-spd]').forEach(function(el) {
+    var s = parseFloat(el.getAttribute('data-spd'));
+    el.style.transform = 'translateX('+((e.clientX/window.innerWidth-0.5)*s*26)+'px) translateY('+((e.clientY/window.innerHeight-0.5)*s*16)+'px)';
+  });
+}, { passive: true });
+window.addEventListener('scroll', function() {
+  document.getElementById('mainHdr').classList.toggle('scrolled', window.scrollY > 6);
+}, { passive: true });
+(function() {
+  var c = document.getElementById('waveCanvas'), ctx = c.getContext('2d'), t = 0;
+  function resize() { c.width = window.innerWidth; c.height = 100; }
+  resize(); window.addEventListener('resize', resize, { passive: true });
+  function wave(off, col, amp, spd, yb) {
+    ctx.beginPath(); ctx.moveTo(0, c.height);
+    for (var x = 0; x <= c.width; x += 2) {
+      var y = yb + Math.sin(x*.007+t*spd+off)*amp + Math.sin(x*.013+t*spd*1.5+off*.5)*(amp*.32) + Math.sin(x*.003+t*spd*.5)*(amp*.18);
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(c.width, c.height); ctx.closePath(); ctx.fillStyle = col; ctx.fill();
+  }
+  (function anim() {
+    ctx.clearRect(0, 0, c.width, c.height);
+    wave(0, 'rgba(232,83,26,0.09)', 22, .48, 58);
+    wave(2, 'rgba(61,124,244,0.06)', 16, .7,  68);
+    wave(4, 'rgba(27,175,122,0.05)', 12, .36, 76);
+    t += .01; requestAnimationFrame(anim);
+  })();
+})();
+
+/* ============================================================
+   5-SECOND LOADER
+============================================================ */
+(function() {
+  var MSGS = ['Gathering performance data...','Syncing GSC metrics...','Loading Google Analytics...','Building content tracker...','Finalising dashboard...','Almost ready...'];
+  var bar = document.getElementById('ldBar'), txt = document.getElementById('ldMsg'),
+      pctEl = document.getElementById('ldPct'), loader = document.getElementById('loader');
+  var done = false, msgIdx = 0;
+  var steps = [
+    { pct:14, t:350 }, { pct:28, t:750 },  { pct:42, t:1200 },
+    { pct:58, t:1800 },{ pct:70, t:2500 }, { pct:80, t:3200 },
+    { pct:88, t:3900 },{ pct:94, t:4500 }
+  ];
+  steps.forEach(function(s) {
+    setTimeout(function() {
+      if (done) return;
+      bar.style.width = s.pct + '%'; pctEl.textContent = s.pct + '%';
+      txt.classList.add('fade');
+      setTimeout(function() {
+        txt.textContent = MSGS[msgIdx % MSGS.length]; msgIdx++;
+        txt.classList.remove('fade');
+      }, 160);
+    }, s.t);
+  });
+  function finish() {
+    if (done) return; done = true;
+    bar.style.width = '100%'; pctEl.textContent = '100%';
+    txt.classList.add('fade');
+    setTimeout(function() { txt.textContent = 'Dashboard ready.'; txt.classList.remove('fade'); }, 160);
+    setTimeout(function() {
+      loader.classList.add('done');
+      setTimeout(function() { loader.style.display = 'none'; }, 850);
+      initCharts();
+      initStorage();
+      posInk();
+    }, 500);
+  }
+  window.addEventListener('load', function() { setTimeout(finish, 300); });
+  setTimeout(finish, 5800);
+})();
+
+</script>
+</body>
+</html>
